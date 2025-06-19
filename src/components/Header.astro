@@ -1,5 +1,5 @@
 ---
-import { Twitter, Github, Send } from "@lucide/astro";
+import { Twitter, Github, Send, Linkedin } from "@lucide/astro";
 ---
 
 <div class="h-24 w-full px-10 flex flex-row items-center justify-between">
@@ -8,14 +8,20 @@ import { Twitter, Github, Send } from "@lucide/astro";
         rel="noopener noreferrer"
         href="/"
         aria-label="Home"
-        class="text-6xl text-blue-400">tom</a
+        class="text-6xl text-red-400">tom</a
     >
-    <div class="flex flex-row gap-x-2 items-center">
+    <div class="flex flex-row gap-x-4 items-center">
         <a
             href="mailto:hi@tomtitcombe.com"
             target="_blank"
             aria-label="Email me"
             rel="noopener noreferrer"><Send /></a
+        >
+        <a
+            href="https://www.linkedin.com/in/tom-titcombe/"
+            target="_blank"
+            aria-label="LinkedIn"
+            rel="noopener noreferrer"><Linkedin /></a
         >
         <a
             href="https://github.com/TTitcombe"
