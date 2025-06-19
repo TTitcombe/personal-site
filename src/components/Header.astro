@@ -2,40 +2,44 @@
 import { Twitter, Github, Send, Linkedin } from "@lucide/astro";
 ---
 
-<div class="h-24 w-full px-10 flex flex-row items-center justify-between">
-    <a
-        target="_blank"
-        rel="noopener noreferrer"
-        href="/"
-        aria-label="Home"
-        class="text-6xl text-red-400">tom</a
-    >
-    <div class="flex flex-row gap-x-4 items-center">
-        <a
-            href="mailto:hi@tomtitcombe.com"
-            target="_blank"
-            aria-label="Email me"
-            rel="noopener noreferrer"><Send /></a
+<header>
+    <nav>
+        <div
+            class="h-24 w-full px-10 flex flex-row items-center justify-between"
         >
-        <a
-            href="https://www.linkedin.com/in/tom-titcombe/"
-            target="_blank"
-            aria-label="LinkedIn"
-            rel="noopener noreferrer"><Linkedin /></a
-        >
-        <a
-            href="https://github.com/TTitcombe"
-            target="_blank"
-            aria-label="My GitHub"
-            rel="noopener noreferrer"
-            ><Github />
-        </a>
-        <a
-            href="https://bsky.app/profile/tomtitcombe.com"
-            target="_blank"
-            aria-label="Bluesky profile"
-            rel="noopener noreferrer"
-            ><Twitter />
-        </a>
-    </div>
-</div>
+            <h1 aria-label="Tom 'logo'" class="text-6xl text-red-400">tom</h1>
+            <div class="flex flex-row gap-x-4 items-center">
+                <a
+                    href="mailto:hi@tomtitcombe.com"
+                    target="_blank"
+                    aria-label="Email me"
+                    class="hover:text-red-400 transition-colors duration-500"
+                    rel="noopener noreferrer"><Send /></a
+                >
+                <a
+                    href="https://www.linkedin.com/in/tom-titcombe/"
+                    target="_blank"
+                    aria-label="LinkedIn"
+                    class="hover:text-red-400 transition-colors duration-500"
+                    rel="noopener noreferrer"><Linkedin /></a
+                >
+                <a
+                    href="https://github.com/TTitcombe"
+                    target="_blank"
+                    aria-label="My GitHub"
+                    class="hover:text-red-400 transition-colors duration-500"
+                    rel="noopener noreferrer"
+                    ><Github />
+                </a>
+                <a
+                    href="https://bsky.app/profile/tomtitcombe.com"
+                    target="_blank"
+                    aria-label="Bluesky profile"
+                    class="hover:text-red-400 transition-colors duration-500"
+                    rel="noopener noreferrer"
+                    ><Twitter />
+                </a>
+            </div>
+        </div>
+    </nav>
+</header>
