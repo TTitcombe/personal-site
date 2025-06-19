@@ -1,0 +1,35 @@
+---
+import { Twitter, Github, Send } from "@lucide/astro";
+---
+
+<div class="h-24 w-full px-10 flex flex-row items-center justify-between">
+    <a
+        target="_blank"
+        rel="noopener noreferrer"
+        href="/"
+        aria-label="Home"
+        class="text-6xl text-blue-400">tom</a
+    >
+    <div class="flex flex-row gap-x-2 items-center">
+        <a
+            href="mailto:hi@tomtitcombe.com"
+            target="_blank"
+            aria-label="Email me"
+            rel="noopener noreferrer"><Send /></a
+        >
+        <a
+            href="https://github.com/TTitcombe"
+            target="_blank"
+            aria-label="My GitHub"
+            rel="noopener noreferrer"
+            ><Github />
+        </a>
+        <a
+            href="https://bsky.app/profile/tomtitcombe.com"
+            target="_blank"
+            aria-label="Bluesky profile"
+            rel="noopener noreferrer"
+            ><Twitter />
+        </a>
+    </div>
+</div>
