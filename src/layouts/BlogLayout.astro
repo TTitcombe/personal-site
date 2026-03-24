@@ -1,0 +1,83 @@
+---
+import Layout from "./Layout.astro";
+
+interface Props {
+    title: string;
+    date: Date;
+    description: string;
+    tags: string[];
+}
+
+const { title, date, description, tags } = Astro.props;
+const formatted = date.toISOString().split("T")[0];
+const filename = title.toLowerCase().replace(/[^a-z0-9]+/g, "-") + ".md";
+---
+
+<Layout title={`${title} - tom titcombe`} description={description}>
+    <!-- File header -->
+    <div
+        style="border: 1px solid rgba(0,255,65,0.15); border-radius: 4px; margin-bottom: 2rem; overflow: hidden;"
+    >
+        <div
+            style="background: #0d0d0d; border-bottom: 1px solid rgba(0,255,65,0.1); padding: 8px 16px; display: flex; align-items: center; gap: 12px; font-size: 12px;"
+        >
+            <span style="color: #555555;">cat</span>
+            <span style="color: #00ff41;">~/blog/{filename}</span>
+            <span style="margin-left: auto; color: #333333;">{formatted}</span>
+        </div>
+
+        <div style="padding: 1.5rem 2rem;">
+            <div style="display: flex; gap: 1.5rem; align-items: flex-start;">
+                <div
+                    style="color: #333333; font-size: 12px; line-height: 1.6; user-select: none; flex-shrink: 0; text-align: right; min-width: 2ch;"
+                >
+                    1<br />2<br />3<br />4
+                </div>
+                <div style="flex: 1;">
+                    <div style="color: #555555; font-size: 13px;">---</div>
+                    <div style="font-size: 13px;">
+                        <span style="color: #ffb000;">title</span><span
+                            style="color: #555555;"
+                            >:
+                        </span><span style="color: #aacc99;">"{title}"</span>
+                    </div>
+                    <div style="font-size: 13px;">
+                        <span style="color: #ffb000;">date</span><span
+                            style="color: #555555;"
+                            >:
+                        </span><span style="color: #aacc99;">{formatted}</span>
+                    </div>
+                    <div style="color: #555555; font-size: 13px;">---</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tags -->
+    {
+        tags.length > 0 && (
+            <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 2rem;">
+                {tags.map((tag) => (
+                    <span style="font-size: 11px; color: #555555; border: 1px solid #222; padding: 1px 7px; border-radius: 2px;">
+                        #{tag}
+                    </span>
+                ))}
+            </div>
+        )
+    }
+
+    <!-- Post content -->
+    <article class="blog-content">
+        <slot />
+    </article>
+
+    <!-- Footer nav -->
+    <div
+        style="margin-top: 3rem; padding-top: 1rem; border-top: 1px solid rgba(0,255,65,0.1); display: flex; justify-content: space-between; font-size: 13px;"
+    >
+        <a href="/blog" style="color: #555555; text-decoration: none;"
+            >← cd /blog</a
+        >
+        <span style="color: #333333;">EOF</span>
+    </div>
+</Layout>

@@ -1,0 +1,303 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout
+    title="cv - tom titcombe"
+    description="Tom's CV - founder, AI engineer."
+>
+    <div style="margin-bottom: 2rem;">
+        <div style="font-size: 11px; color: #555555; margin-bottom: 0.5rem;">
+            <a href="/" style="color: #555555; text-decoration: none;">~/</a>
+            <span style="color: #00ff41;"> cv.txt</span>
+        </div>
+        <div
+            style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;"
+        >
+            <h1
+                style="font-size: 1.6rem; font-weight: 700; color: #00ff41; margin: 0;"
+            >
+                cat cv.txt
+            </h1>
+            <a
+                href="/cv.pdf"
+                download
+                style="font-size: 12px; color: #ffb000; border: 1px solid rgba(255,176,0,0.3); padding: 3px 10px; border-radius: 2px; text-decoration: none; background: rgba(255,176,0,0.07);"
+            >
+                [↓ download pdf]
+            </a>
+        </div>
+    </div>
+
+    <!-- CV content -->
+    <div
+        style="border: 1px solid rgba(0,255,65,0.15); border-radius: 4px; overflow: hidden; font-size: 13px;"
+    >
+        <!-- File bar -->
+        <div
+            style="background: #0d0d0d; border-bottom: 1px solid rgba(0,255,65,0.1); padding: 8px 16px; font-size: 12px; color: #555555;"
+        >
+            cv.txt - readonly
+        </div>
+
+        <div
+            style="padding: 2rem; display: flex; flex-direction: column; gap: 2rem;"
+        >
+            <!-- Header -->
+            <div>
+                <div
+                    style="font-size: 1.3rem; font-weight: 700; color: #00ff41; margin-bottom: 4px;"
+                >
+                    TOM
+                </div>
+                <div style="color: #aacc99;">Founder · AI Engineer</div>
+                <div style="color: #555555; margin-top: 4px; font-size: 12px;">
+                    <a
+                        href="mailto:hi@tomtitcombe.com"
+                        style="color: #555555;"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >hi@tomtitcombe.com
+                    </a>
+                    ·
+                    <a
+                        href="https://github.com"
+                        style="color: #555555;"
+                        target="_blank"
+                        style="text-decoration: underline;"
+                        rel="noopener noreferrer">github.com/TTitcombe</a
+                    >
+                </div>
+            </div>
+
+            <p>
+                Short-form CV. <a href="mailto:hi@tomtitcombe.com">Email me</a> for
+                the full thing.
+            </p>
+
+            <!-- Summary -->
+            <div>
+                <div
+                    style="color: #ffb000; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.08em;"
+                >
+                    # summary
+                </div>
+                <p style="color: #aacc99; margin: 0; line-height: 1.7;">
+                    Multi-time founder and AI engineer; experienced in building
+                    and shipping products from zero. Co-founded a seed-funded
+                    code analysis startup, led engineering across the full
+                    stack, and spent the last two years deep in LLM application
+                    development - evals, RAG, semantic search, developer
+                    tooling. Looking for a technically challenging role at an
+                    AI-native company.
+                </p>
+            </div>
+
+            <!-- Experience -->
+            <div>
+                <div
+                    style="color: #ffb000; font-size: 12px; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.08em;"
+                >
+                    # experience
+                </div>
+
+                <div
+                    style="display: flex; flex-direction: column; gap: 1.5rem;"
+                >
+                    <div>
+                        <div
+                            style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 4px;"
+                        >
+                            <div>
+                                <span style="color: #00ff41; font-weight: 700;"
+                                    >Co-founder & CTO</span
+                                >
+                                <span style="color: #555555;">
+                                    · Handlebar</span
+                                >
+                                <a
+                                    href="https://gethandlebar.com"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    >[gethandlebar.com]</a
+                                >
+                            </div>
+                            <!-- <span style="color: #555555; font-size: 12px;"
+                                >2025 - 2026</span
+                            > -->
+                        </div>
+                        <ul
+                            style="color: #aacc99; margin: 0; padding-left: 1.5rem; line-height: 1.8;"
+                        >
+                            <li>
+                                Built a <a
+                                    href="https://github.com/gethandlebar/handlebar-js"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    >deterministic rule engine</a
+                                > for controlling AI agents at runtime
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <div
+                            style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 4px;"
+                        >
+                            <div>
+                                <span style="color: #00ff41; font-weight: 700;"
+                                    >Co-founder & CTO</span
+                                >
+                                <span style="color: #555555;"> · Rover</span>
+                                <a
+                                    href="https://getrover.com"
+                                    target="_blank"
+                                    rel="noopener noreferrer">[getrover.com]</a
+                                >
+                            </div>
+                            <!-- <span style="color: #555555; font-size: 12px;"
+                                >2022 - 2025</span
+                            > -->
+                        </div>
+                        <ul
+                            style="color: #aacc99; margin: 0; padding-left: 1.5rem; line-height: 1.8;"
+                        >
+                            <li>
+                                Autonomous bug detection platform using AI
+                                agents and knowledge graphs.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <div
+                            style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 4px;"
+                        >
+                            <div>
+                                <span style="color: #00ff41; font-weight: 700;"
+                                    >Team Lead</span
+                                >
+                                <span style="color: #555555;">
+                                    · OpenMined</span
+                                >
+                            </div>
+                            <!-- <span style="color: #555555; font-size: 12px;"
+                                >- 2022</span
+                            > -->
+                        </div>
+                        <ul
+                            style="color: #aacc99; margin: 0; padding-left: 1.5rem; line-height: 1.8;"
+                        >
+                            <li>
+                                Researched ML privacy attacks (jailbreaking,
+                                model inversion, identity attacks)
+                            </li>
+                            <li>
+                                Published in workshops in NeurIPS, ICLR, ICIP
+                            </li>
+                            <li>
+                                Developed <a
+                                    href="https://github.com/OpenMined/PyVertical"
+                                    target="_blank"
+                                    rel="noopener noreferrer">PyVertical</a
+                                >, an open-source vertical federated learning
+                                library
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Skills -->
+            <div>
+                <div
+                    style="color: #ffb000; font-size: 12px; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.08em;"
+                >
+                    # skills
+                </div>
+
+                <div
+                    style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.75rem;"
+                >
+                    {
+                        [
+                            ["Languages", "TypeScript, Python, Go, SQL"],
+                            [
+                                "AI",
+                                "LLMOps, AI agents, RAG, evals, embeddings, vector DBs",
+                            ],
+                            [
+                                "Infrastructure",
+                                "Kubernetes, Terraform, Vercel, AWS, Docker",
+                            ],
+                            [
+                                "Backend",
+                                "Bun, Elysia, Node.js, Postgres, Redis",
+                            ],
+                            ["Frontend", "React, Astro, Tailwind"],
+                            [
+                                "Misc.",
+                                "product analytics, user interviews, observability, and I make a superb Ruby Murray",
+                            ],
+                        ].map(([category, value]) => (
+                            <div>
+                                <div style="color: #555555; font-size: 11px; margin-bottom: 2px;">
+                                    {category}
+                                </div>
+                                <div style="color: #aacc99; font-size: 12px;">
+                                    {value}
+                                </div>
+                            </div>
+                        ))
+                    }
+                </div>
+            </div>
+
+            <!-- Education -->
+            <div>
+                <div
+                    style="color: #ffb000; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.08em;"
+                >
+                    # education
+                </div>
+                <div
+                    style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;"
+                >
+                    <div>
+                        <span style="color: #00ff41;"
+                            >MSc. Machine Learning</span
+                        >
+                        <span style="color: #555555;">
+                            · Imperial College London</span
+                        >
+                    </div>
+                    <!-- <span style="color: #555555; font-size: 12px;">20XX</span> -->
+                </div>
+                <div
+                    style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;"
+                >
+                    <div>
+                        <span style="color: #00ff41;">BSc. Physics</span>
+                        <span style="color: #555555;">
+                            · Durham University</span
+                        >
+                    </div>
+                    <!-- <span style="color: #555555; font-size: 12px;">20XX</span> -->
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div
+                style="border-top: 1px solid rgba(0,255,65,0.1); padding-top: 1rem; font-size: 12px; color: #555555; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;"
+            >
+                <span>// EOF</span>
+                <a
+                    href="/cv.pdf"
+                    download
+                    style="color: #ffb000; text-decoration: none;"
+                >
+                    [↓ download as pdf]
+                </a>
+            </div>
+        </div>
+    </div>
+</Layout>

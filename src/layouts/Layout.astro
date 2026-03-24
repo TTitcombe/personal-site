@@ -1,0 +1,48 @@
+---
+import Nav from "../components/Nav.astro";
+import "../styles/global.css";
+
+interface Props {
+    title?: string;
+    description?: string;
+}
+
+const {
+    title = "tom - founder & ai engineer",
+    description = "Founder, AI engineer, bit-of-everything hacker. Looking for the next interesting problem.",
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content={description} />
+        <title>{title}</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    </head>
+    <body>
+        <Nav />
+        <main
+            style="max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 4rem;"
+        >
+            <slot />
+        </main>
+
+        <footer
+            style="border-top: 1px solid rgba(0,255,65,0.08); text-align: center; padding: 1.5rem; font-size: 12px; color: #333333;"
+        >
+            <span>tom - </span>
+            <span style="color: #00ff4133;"
+                >// my regards to Claude for <s>helping me with</s> the website</span
+            >
+        </footer>
+    </body>
+</html>

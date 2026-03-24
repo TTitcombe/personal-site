@@ -1,0 +1,115 @@
+---
+import Terminal from "../components/Terminal";
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="tom - founder & ai engineer">
+    <!-- Hero -->
+    <section style="margin-bottom: 3rem;">
+        <div style="margin-bottom: 1.5rem;">
+            <div
+                style="font-size: 11px; color: #555555; margin-bottom: 0.5rem;"
+            >
+                last login: {new Date().toDateString()} on ttys000
+            </div>
+            <h1
+                style="font-size: clamp(1.4rem, 4vw, 2rem); font-weight: 700; color: #00ff41; margin: 0 0 0.5rem 0; line-height: 1.2;"
+            >
+                <span style="color: #555555;">~/</span>tom<span
+                    class="cursor-blink"
+                    style="color: #00ff41; margin-left: 2px;">▋</span
+                >
+            </h1>
+            <p
+                style="color: #aacc99; font-size: 14px; margin: 0; max-width: 540px;"
+            >
+                Founder · AI engineer
+                <br />
+                <span style="color: #555555;">
+                    Previously: co-founded Rover (seed; AI code analysis).
+                    Currently: exploring control & eval problems in AI agents.
+                </span>
+            </p>
+        </div>
+
+        <!-- Terminal widget -->
+        <Terminal client:load />
+
+        <div style="margin-top: 0.75rem; font-size: 11px; color: #333333;">
+            try: <span style="color: #00ff4177;">whoami</span> ·
+            <span style="color: #00ff4177;">ls projects</span> ·
+            <span style="color: #00ff4177;">cat cv.txt</span> ·
+            <span style="color: #00ff4177;">help</span>
+        </div>
+    </section>
+
+    <!-- Quick links section -->
+    <section>
+        <div
+            style="color: #555555; font-size: 12px; margin-bottom: 1rem; border-bottom: 1px solid rgba(0,255,65,0.08); padding-bottom: 0.5rem;"
+        >
+            # quick navigation
+        </div>
+
+        <div
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;"
+        >
+            <a
+                href="/projects"
+                style="border: 1px solid rgba(0,255,65,0.15); border-radius: 4px; padding: 1rem; text-decoration: none; transition: border-color 0.2s;"
+                onmouseover="this.style.borderColor='rgba(0,255,65,0.4)'"
+                onmouseout="this.style.borderColor='rgba(0,255,65,0.15)'"
+            >
+                <div
+                    style="color: #555555; font-size: 11px; margin-bottom: 4px;"
+                >
+                    cd ~/
+                </div>
+                <div style="color: #00ff41; font-size: 14px; font-weight: 700;">
+                    projects/
+                </div>
+                <div style="color: #aacc99; font-size: 12px; margin-top: 4px;">
+                    shipped, wip & rip
+                </div>
+            </a>
+
+            <a
+                href="/blog"
+                style="border: 1px solid rgba(0,255,65,0.15); border-radius: 4px; padding: 1rem; text-decoration: none; transition: border-color 0.2s;"
+                onmouseover="this.style.borderColor='rgba(0,255,65,0.4)'"
+                onmouseout="this.style.borderColor='rgba(0,255,65,0.15)'"
+            >
+                <div
+                    style="color: #555555; font-size: 11px; margin-bottom: 4px;"
+                >
+                    cd ~/
+                </div>
+                <div style="color: #00ff41; font-size: 14px; font-weight: 700;">
+                    blog/
+                </div>
+                <div style="color: #aacc99; font-size: 12px; margin-top: 4px;">
+                    unsorted collection of thoughts
+                </div>
+            </a>
+
+            <a
+                href="/cv"
+                style="border: 1px solid rgba(0,255,65,0.15); border-radius: 4px; padding: 1rem; text-decoration: none; transition: border-color 0.2s;"
+                onmouseover="this.style.borderColor='rgba(0,255,65,0.4)'"
+                onmouseout="this.style.borderColor='rgba(0,255,65,0.15)'"
+            >
+                <div
+                    style="color: #555555; font-size: 11px; margin-bottom: 4px;"
+                >
+                    cat ~/
+                </div>
+                <div style="color: #00ff41; font-size: 14px; font-weight: 700;">
+                    cv.txt
+                </div>
+                <div style="color: #aacc99; font-size: 12px; margin-top: 4px;">
+                    experience, skills + PDF download
+                </div>
+            </a>
+        </div>
+    </section>
+</Layout>

@@ -1,0 +1,67 @@
+---
+interface Props {
+    title: string;
+    date: Date;
+    description: string;
+    tags: string[];
+    slug: string;
+    link?: string;
+}
+
+const { title, date, description, tags, slug, link } = Astro.props;
+
+const formatted = date.toISOString().split("T")[0];
+const href = link ?? `/blog/${slug}`;
+const isExternal = !!link;
+const sourceHost = link ? new URL(link).hostname.replace(/^www\./, "") : null;
+---
+
+<a
+    href={href}
+    {...isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {}}
+    style="display: block; text-decoration: none;"
+>
+    <div
+        style="border: 1px solid rgba(0,255,65,0.1); border-radius: 4px; padding: 1.25rem 1.5rem; transition: border-color 0.2s, background 0.2s; cursor: pointer;"
+        onmouseover="this.style.borderColor='rgba(0,255,65,0.3)'; this.style.background='rgba(0,255,65,0.03)';"
+        onmouseout="this.style.borderColor='rgba(0,255,65,0.1)'; this.style.background='transparent';"
+    >
+        <div
+            style="display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 0.4rem;"
+        >
+            <span style="color: #555555; font-size: 12px; flex-shrink: 0;"
+                >{formatted}</span
+            >
+            <span style="color: #00ff41; font-size: 15px; font-weight: 700;"
+                >{title}</span
+            >
+        </div>
+
+        <p
+            style="color: #aacc99; font-size: 13px; margin: 0 0 0.5rem 0; line-height: 1.5;"
+        >
+            {description}
+        </p>
+
+        <div
+            style="display: flex; align-items: center; justify-content: space-between; gap: 6px; flex-wrap: wrap;"
+        >
+            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                {
+                    tags.map((tag) => (
+                        <span style="font-size: 11px; color: #555555; border: 1px solid #222; padding: 0 5px; border-radius: 2px;">
+                            #{tag}
+                        </span>
+                    ))
+                }
+            </div>
+            {
+                sourceHost && (
+                    <span style="font-size: 11px; color: #557755; border: 1px solid #334433; padding: 0 6px; border-radius: 2px; white-space: nowrap;">
+                        ↗ {sourceHost}
+                    </span>
+                )
+            }
+        </div>
+    </div>
+</a>

@@ -1,0 +1,45 @@
+---
+import { getCollection } from "astro:content";
+import BlogPostCard from "../../components/BlogPostCard.astro";
+import Layout from "../../layouts/Layout.astro";
+
+const posts = await getCollection("blog", ({ data }) => !data.draft);
+const sorted = posts.sort(
+    (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+);
+---
+
+<Layout
+    title="blog - tom titcombe"
+    description="unsorted collection of thoughts."
+>
+    <div style="margin-bottom: 2rem;">
+        <div style="font-size: 11px; color: #555555; margin-bottom: 0.5rem;">
+            <a href="/" style="color: #555555; text-decoration: none;">~/</a>
+            <span style="color: #00ff41;"> blog/</span>
+        </div>
+        <h1
+            style="font-size: 1.6rem; font-weight: 700; color: #00ff41; margin: 0 0 0.5rem 0;"
+        >
+            ls -lt blog/
+        </h1>
+        <p style="color: #aacc99; font-size: 13px; margin: 0;">
+            {sorted.length} posts · newest first
+        </p>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+        {
+            sorted.map((post) => (
+                <BlogPostCard
+                    title={post.data.title}
+                    date={post.data.date}
+                    description={post.data.description}
+                    tags={post.data.tags}
+                    slug={post.id}
+                    link={post.data.link}
+                />
+            ))
+        }
+    </div>
+</Layout>
