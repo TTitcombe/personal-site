@@ -265,6 +265,13 @@ export default function Terminal() {
   const inputRef = useRef<HTMLInputElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
+  // Focus input without scrolling when it becomes ready
+  useEffect(() => {
+    if (inputReady) {
+      inputRef.current?.focus({ preventScroll: true });
+    }
+  }, [inputReady]);
+
   // Boot sequence
   useEffect(() => {
     let cancelled = false;
@@ -462,7 +469,6 @@ export default function Terminal() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                autoFocus
                 autoComplete="off"
                 autoCorrect="off"
                 autoCapitalize="off"
