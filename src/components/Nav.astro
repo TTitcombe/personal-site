@@ -10,78 +10,125 @@ const links = [
 ];
 ---
 
-<nav
-    style="border-bottom: 1px solid rgba(0,255,65,0.12); background: rgba(10,10,10,0.95); backdrop-filter: blur(8px); position: sticky; top: 0; z-index: 100; padding: 0.6rem 0;"
->
-    <div
-        style="max-width: 860px; margin: 0 auto; padding: 0 1.5rem; display: flex; align-items: center; gap: 0; font-size: 13px;"
-    >
-        <span style="color: #555555; margin-right: 4px;">tom@portfolio</span>
-        <span style="color: #00ff41; margin-right: 16px;">:</span>
+<nav class="site-nav">
+    <div class="nav-inner">
+        <div class="nav-primary">
+            <span style="color: #555555; margin-right: 4px;">tom@portfolio</span
+            >
+            <span style="color: #00ff41; margin-right: 16px;">:</span>
 
-        <div
-            style="display: flex; gap: 4px; flex-wrap: wrap; align-items: center;"
-        >
-            {
-                links.map((link) => {
-                    const isActive =
-                        currentPath === link.href ||
-                        (link.href !== "/" &&
-                            currentPath.startsWith(link.href));
-                    return (
-                        <a
-                            href={link.href}
-                            title={link.title}
-                            style={`
-              padding: 2px 10px;
-              border-radius: 2px;
-              font-family: inherit;
-              font-size: 13px;
-              text-decoration: none;
-              transition: all 0.15s;
-              color: ${isActive ? "#00ff41" : "#555555"};
-              border: 1px solid ${isActive ? "rgba(0,255,65,0.3)" : "transparent"};
-              background: ${isActive ? "rgba(0,255,65,0.07)" : "transparent"};
-            `}
-                        >
-                            {link.href !== "/" && (
-                                <span style="color: #00ff4166;">~/</span>
-                            )}
-                            {link.label}
-                        </a>
-                    );
-                })
-            }
-        </div>
+            <div class="nav-links">
+                {
+                    links.map((link) => {
+                        const isActive =
+                            currentPath === link.href ||
+                            (link.href !== "/" &&
+                                currentPath.startsWith(link.href));
+                        return (
+                            <a
+                                href={link.href}
+                                title={link.title}
+                                style={`
+                  padding: 2px 10px;
+                  border-radius: 2px;
+                  font-family: inherit;
+                  font-size: 13px;
+                  text-decoration: none;
+                  transition: all 0.15s;
+                  color: ${isActive ? "#00ff41" : "#555555"};
+                  border: 1px solid ${isActive ? "rgba(0,255,65,0.3)" : "transparent"};
+                  background: ${isActive ? "rgba(0,255,65,0.07)" : "transparent"};
+                `}
+                            >
+                                {link.href !== "/" && (
+                                    <span style="color: #00ff4166;">~/</span>
+                                )}
+                                {link.label}
+                            </a>
+                        );
+                    })
+                }
+            </div>
 
-        <div
-            style="margin-left: auto; display: flex; gap: 12px; align-items: center;"
-        >
-            <a
-                href="mailto:hi@tomtitcombe.com"
-                style="color: #555555; font-size: 12px; text-decoration: none;"
-                title="email"
-            >
-                [email]
-            </a>
-            <a
-                href="https://github.com/TTitcombe"
-                target="_blank"
-                rel="noopener noreferrer"
-                style="color: #555555; font-size: 12px; text-decoration: none;"
-                title="github"
-            >
-                [github]
-            </a>
-            <a
-                href="https://www.linkedin.com/in/tom-titcombe/"
-                target="_blank"
-                rel="noopener noreferrer"
-                style="color: #555555; font-size: 12px; text-decoration: none;"
-                title="linkedin"
-            >
-                [linkedin]
-            </a>
+            <div class="nav-socials">
+                <a
+                    href="mailto:hi@tomtitcombe.com"
+                    style="color: #555555; font-size: 12px; text-decoration: none;"
+                    title="email"
+                >
+                    [email]
+                </a>
+                <a
+                    href="https://github.com/TTitcombe"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style="color: #555555; font-size: 12px; text-decoration: none;"
+                    title="github"
+                >
+                    [github]
+                </a>
+                <a
+                    href="https://www.linkedin.com/in/tom-titcombe/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style="color: #555555; font-size: 12px; text-decoration: none;"
+                    title="linkedin"
+                >
+                    [linkedin]
+                </a>
+            </div>
         </div>
     </div>
 </nav>
+
+<style>
+    .site-nav {
+        border-bottom: 1px solid rgba(0, 255, 65, 0.12);
+        background: rgba(10, 10, 10, 0.95);
+        backdrop-filter: blur(8px);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        padding: 0.6rem 0;
+    }
+
+    .nav-inner {
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+        font-size: 13px;
+    }
+
+    .nav-primary {
+        display: flex;
+        align-items: center;
+        gap: 0;
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .nav-socials {
+        margin-left: auto;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+    }
+
+    @media (max-width: 540px) {
+        .nav-primary {
+            flex-wrap: wrap;
+            row-gap: 6px;
+        }
+
+        .nav-socials {
+            margin-left: 0;
+            width: 100%;
+            padding-left: 2px;
+        }
+    }
+</style>

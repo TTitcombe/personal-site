@@ -21,13 +21,18 @@ const BOOT_SEQUENCE = [
 
 const PROJECTS = [
   {
+    name: "(Hackathon) EU AI act helper",
+    status: "shipped",
+    desc: "Analyses a product's exposure to the EU AI act, and what the team can do about it.",
+  },
+  {
     name: "handlebar",
     status: "wip",
     desc: "Runtime control layer for AI agents",
   },
   {
     name: "rover",
-    status: "acquired",
+    status: "exited",
     desc: "Bug detection with AI agents and code-graph analysis",
   },
   {
