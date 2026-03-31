@@ -21,6 +21,11 @@ const BOOT_SEQUENCE = [
 
 const PROJECTS = [
   {
+    name: "(Hackathon) convene",
+    status: "shipped",
+    desc: "90 minute Hackathon. AI agent which automates tech event management with Luma and web search.",
+  },
+  {
     name: "(Hackathon) EU AI act helper",
     status: "shipped",
     desc: "Analyses a product's exposure to the EU AI act, and what the team can do about it.",
