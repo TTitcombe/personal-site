@@ -67,11 +67,12 @@ const COMMANDS: Record<string, (args: string) => OutputLine[]> = {
     { type: "blank", content: "" },
     {
       type: "output",
-      content: "Founder + AI engineer. I like building things with ML/AI",
+      content: "Founder + AI engineer. Problem-driven, domain agnostic -",
     },
     {
       type: "output",
-      content: "and have *just* a few opinions about how to do it.",
+      content:
+        "I've worked on AI for sports, healthcare, devops, finance, aerospace, and more.",
     },
     { type: "blank", content: "" },
     {
