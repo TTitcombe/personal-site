@@ -5,7 +5,7 @@ export type NowItem = {
 };
 
 export const NOW = {
-  lastUpdated: "2026-03-24",
+  lastUpdated: "2026-04-01",
   building: [
     {
       text: "Shipping some side projects I've wanted for ages. Right now, hacking on an agent-native learning tool, 'questlog'",

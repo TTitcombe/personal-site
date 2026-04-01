@@ -38,6 +38,8 @@ const statusBorder = {
 ---
 
 <div
+    data-status={status}
+    data-tags={tags.join(",")}
     style={`
     border: 1px solid ${statusBorder[status]};
     background: ${statusBg[status]};

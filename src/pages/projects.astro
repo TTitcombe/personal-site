@@ -5,6 +5,15 @@ import Layout from "../layouts/Layout.astro";
 
 const projects = await getCollection("projects");
 const sorted = projects.sort((a, b) => (b.data.year ?? 0) - (a.data.year ?? 0));
+const tagCounts = new Map<string, number>();
+sorted.forEach((p) => {
+    p.data.tags.forEach((t) => {
+        tagCounts.set(t, (tagCounts.get(t) ?? 0) + 1);
+    });
+});
+const allTags = Array.from(tagCounts.entries())
+    .filter(([, count]) => count > 1)
+    .map(([t]) => t);
 ---
 
 <Layout
@@ -33,6 +42,55 @@ const sorted = projects.sort((a, b) => (b.data.year ?? 0) - (a.data.year ?? 0));
     </div>
 
     <div
+        style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem;"
+    >
+        <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
+            <button
+                class="filter-chip"
+                data-type="status"
+                data-value="shipped"
+                data-active="false">shipped</button
+            >
+            <button
+                class="filter-chip"
+                data-type="status"
+                data-value="wip"
+                data-active="false">wip</button
+            >
+            <button
+                class="filter-chip"
+                data-type="status"
+                data-value="exited"
+                data-active="false">exited</button
+            >
+            <button
+                class="filter-chip"
+                data-type="status"
+                data-value="rip"
+                data-active="false">rip</button
+            >
+        </div>
+        <div
+            style="width: 1px; height: 16px; background: #333; flex-shrink: 0;"
+        >
+        </div>
+        <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
+            {
+                allTags.map((tag) => (
+                    <button
+                        class="filter-chip"
+                        data-type="tag"
+                        data-value={tag}
+                        data-active="false"
+                    >
+                        #{tag}
+                    </button>
+                ))
+            }
+        </div>
+    </div>
+
+    <div
         style="display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1rem;"
     >
         {
@@ -49,4 +107,85 @@ const sorted = projects.sort((a, b) => (b.data.year ?? 0) - (a.data.year ?? 0));
             ))
         }
     </div>
+    <script>
+        const chips = document.querySelectorAll(".filter-chip");
+        const cards = document.querySelectorAll("[data-status]");
+        const activeStatuses = new Set();
+        const activeTags = new Set();
+
+        chips.forEach((chip) => {
+            chip.addEventListener("click", () => {
+                const type = chip.dataset.type;
+                const value = chip.dataset.value;
+                const set = type === "status" ? activeStatuses : activeTags;
+
+                if (set.has(value)) {
+                    set.delete(value);
+                    chip.dataset.active = "false";
+                } else {
+                    set.add(value);
+                    chip.dataset.active = "true";
+                }
+
+                updateCards();
+            });
+        });
+
+        function updateCards() {
+            const noFilters =
+                activeStatuses.size === 0 && activeTags.size === 0;
+            cards.forEach((card) => {
+                if (noFilters) {
+                    card.style.display = "";
+                    return;
+                }
+                const status = card.dataset.status;
+                const tags = card.dataset.tags
+                    ? card.dataset.tags.split(",")
+                    : [];
+                const matches =
+                    activeStatuses.has(status) ||
+                    tags.some((t) => activeTags.has(t));
+                card.style.display = matches ? "" : "none";
+            });
+        }
+    </script>
+
+    <style>
+        .filter-chip {
+            font-size: 11px;
+            font-family: inherit;
+            padding: 1px 7px;
+            border-radius: 2px;
+            border: 1px solid #333;
+            background: transparent;
+            color: #444;
+            cursor: pointer;
+            transition:
+                border-color 0.15s,
+                background 0.15s,
+                color 0.15s;
+        }
+        .filter-chip[data-active="true"][data-value="shipped"],
+        .filter-chip[data-active="true"][data-value="exited"] {
+            color: #00ff41;
+            border-color: rgba(0, 255, 65, 0.5);
+            background: rgba(0, 255, 65, 0.07);
+        }
+        .filter-chip[data-active="true"][data-value="wip"] {
+            color: #ffb000;
+            border-color: rgba(255, 176, 0, 0.5);
+            background: rgba(255, 176, 0, 0.07);
+        }
+        .filter-chip[data-active="true"][data-value="rip"] {
+            color: #ff3333;
+            border-color: rgba(255, 51, 51, 0.5);
+            background: rgba(255, 51, 51, 0.07);
+        }
+        .filter-chip[data-active="true"][data-type="tag"] {
+            color: #00ff41;
+            border-color: rgba(0, 255, 65, 0.4);
+            background: rgba(0, 255, 65, 0.07);
+        }
+    </style>
 </Layout>
