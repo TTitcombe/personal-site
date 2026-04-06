@@ -480,6 +480,7 @@ export default function Terminal() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
+                aria-label="Terminal command input"
                 autoComplete="off"
                 autoCorrect="off"
                 autoCapitalize="off"
