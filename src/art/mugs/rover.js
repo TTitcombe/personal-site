@@ -1,0 +1,28 @@
+// Rover: an orange mug with the robot in white.
+export const rover = {
+  body: 'o',
+  rim: 'W',
+  inside: 'h',
+  shine: 'O',
+  print: [
+    '...WWWWWWWWWWWWWW...',
+    '..WWW..WWWWWW..WWW..',
+    '..WWW..WWWWWW..WWW..',
+    '..WWWWWWWWWWWWWWWW..',
+    '...WWWWWWWWWWWWWW...',
+    '........WWWW........',
+    '........WWWW........',
+    '....WWWWWWWWWWWW....',
+    '...WWW.WWWWWW.WWW...',
+    '...WWW.WWWWWW.WWW...',
+    '...WWW.WWWWWW.WWW...',
+    '...WWWW..WW..WWWW...',
+    '...WWWWWWWWWWWWWW...',
+    '.WWWWWWWWWWWWWWWWWW.',
+    'WWWWWWWWWWWWWWWWWWWW',
+    'WWWWW..........WWWWW',
+    'WWWWW..........WWWWW',
+    'WWWWW..........WWWWW',
+    '.WWW............WWW.',
+  ],
+};
