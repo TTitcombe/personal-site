@@ -35,9 +35,12 @@ export const tom = {
     },
     interests: {
       text: [
-        'Researching frontier AI and governance - what happens to everyone else as AI keeps scaling.',
-        "Right now I'm building a home assistant from scratch, to learn what breaks in agents when we introduce it into our lives.",
-        "That's my _winter arc_, at the shrine. Away from the keyboard, I play rugby and D&D.",
+        'Researching frontier AI and governance -',
+        'what happens to everyone else as AI keeps scaling.',
+        "Right now I'm building a home assistant from scratch,",
+        'to learn what breaks in agents when we introduce it into our lives.',
+        "That's my _winter arc_, at the shrine.",
+        'Away from the keyboard, I play rugby and D&D.',
         'I write about all of it. New notes come out of the _printer_.',
       ],
       next: 'more',
