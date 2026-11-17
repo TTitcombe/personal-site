@@ -1,0 +1,645 @@
+<!doctype html>
+<!-- A template: build/build.js fills in the marked slots and inlines the game. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <!-- head -->
+    <script>
+      // Normal mode (no game) is applied before anything paints. See src/ui/mode.js.
+      try {
+        if (localStorage.getItem('mode') === 'normal') document.documentElement.classList.add('normal');
+      } catch {}
+    </script>
+    <style>
+      :root {
+        --bg: #1f1a24;
+        --fg: #e4e0d2;
+        --muted: #a39fae;
+        --accent: #d2a8cb;
+        color-scheme: dark;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+      body {
+        background: var(--bg);
+        color: var(--fg);
+        /* Clear of the notch in landscape (the page reaches the screen edges: viewport-fit). */
+        padding-inline: env(safe-area-inset-left) env(safe-area-inset-right);
+        font: 14px/1.4 ui-monospace, Menlo, Consolas, monospace;
+      }
+      a {
+        color: var(--accent);
+      }
+      /* top-bar-css */
+
+      /* ── The game ─────────────────────────────────────────────────────────── */
+      .game {
+        min-height: calc(100dvh - 4rem);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 16px;
+      }
+      .normal .game {
+        display: none;
+      }
+      /* Phones: the game at the top, so the hub starts just below it. */
+      @media (max-width: 40rem) {
+        .game {
+          min-height: 0;
+          justify-content: flex-start;
+        }
+      }
+      canvas {
+        display: block;
+        image-rendering: pixelated;
+        touch-action: none;
+      }
+      /* ── Text over the game: GBA-style boxes in the game's own pixel font ───────
+         Sized in game pixels (--px). The font (pixel.ttf, built from src/art/font.js) is 9
+         pixels tall; line heights are odd so every line's text lands on whole pixels. The
+         frame and the --ui-* colours come from src/art/ui.js, via src/ui/theme.js. */
+      @font-face {
+        font-family: 'Office Pixel';
+        src: url(/pixel.ttf) format('truetype');
+        font-display: block;
+      }
+      .stage {
+        position: relative;
+        font: calc(var(--px) * 9) / calc(var(--px) * 13) 'Office Pixel', monospace;
+        font-synthesis: none;
+        -webkit-font-smoothing: none;
+        --ui-px: 2px; /* the window's text scale */
+        --unit: var(--px); /* one pixel of the UI: the office's scale, or the window's own */
+      }
+      /* The GBA's drop shadow: one pixel right, down, and both. */
+      .stage,
+      .dialogue,
+      .panel {
+        --text-shadow: var(--unit) 0 var(--ui-shadow), 0 var(--unit) var(--ui-shadow), var(--unit) var(--unit) var(--ui-shadow);
+        --band-shadow: var(--unit) 0 var(--ui-band-shadow), 0 var(--unit) var(--ui-band-shadow),
+          var(--unit) var(--unit) var(--ui-band-shadow);
+      }
+      /* Layout rules below set display; hidden still wins. */
+      .stage [hidden] {
+        display: none !important;
+      }
+      .box {
+        color: var(--ui-text);
+        text-shadow: var(--text-shadow);
+        border: calc(var(--unit) * var(--frame-slice)) solid transparent;
+        border-image: var(--frame) var(--frame-slice) fill;
+        image-rendering: pixelated;
+        padding: calc(var(--unit) * 2) calc(var(--unit) * 4);
+        pointer-events: auto;
+      }
+      /* White text on the dark bands (menu headers, the speaker's name). */
+      .band {
+        background: var(--ui-band);
+        color: var(--ui-band-text);
+        text-shadow: var(--band-shadow);
+      }
+      .more {
+        position: absolute;
+        right: calc(var(--unit) * 4);
+        bottom: calc(var(--unit) * 1);
+        line-height: calc(var(--unit) * 9);
+        animation: bob 0.5s steps(1) infinite;
+      }
+      @keyframes bob {
+        50% {
+          transform: translateY(var(--unit));
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .more {
+          animation: none;
+        }
+      }
+
+      /* The text box: along the bottom of the office, three lines (tests check every page
+         fits), drawn at the window's text scale rather than the office's. */
+      .dialogue {
+        --unit: var(--ui-px);
+        position: absolute;
+        inset: auto 0 calc(var(--px) * 4);
+        width: min(calc(100% - var(--px) * 8), calc(var(--unit) * 300));
+        margin-inline: auto;
+        font-size: calc(var(--unit) * 9);
+        line-height: calc(var(--unit) * 13);
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        pointer-events: none;
+      }
+      .textbox {
+        position: relative;
+        align-self: stretch;
+        height: calc(var(--unit) * (3 * 13 + 2 * 2 + 2 * var(--frame-slice)));
+        cursor: pointer;
+      }
+      .speaker {
+        position: absolute;
+        top: calc(var(--unit) * -11);
+        left: calc(var(--unit) * -1);
+        padding: var(--unit) calc(var(--unit) * 3) 0;
+        border: var(--unit) solid var(--ui-outline);
+        line-height: calc(var(--unit) * 9);
+      }
+      .unrevealed {
+        visibility: hidden;
+      }
+      .marked {
+        text-decoration: underline;
+        text-decoration-thickness: var(--unit);
+        text-underline-offset: calc(var(--unit) * 2);
+      }
+      .choices {
+        padding-block: calc(var(--unit) * 1);
+      }
+      .choices ul {
+        list-style: none;
+        padding: 0;
+      }
+      .choices button {
+        all: unset;
+        position: relative;
+        display: block;
+        padding-left: calc(var(--unit) * 7);
+        cursor: pointer;
+      }
+      .choices button.selected::before {
+        content: '▶';
+        position: absolute;
+        left: 0;
+      }
+      .choices button:focus-visible {
+        outline: var(--unit) dotted var(--ui-text);
+      }
+
+      .hint {
+        color: var(--muted);
+        text-align: center;
+      }
+      .touch-hint,
+      .keys-hint {
+        display: none;
+      }
+      @media (hover: hover) {
+        .keys-hint {
+          display: inline;
+        }
+      }
+      @media (hover: none) {
+        .touch-hint {
+          display: inline;
+        }
+      }
+
+      /* ── The window: a section page over the office ────────────────────────────
+         A framed window with a margin of office showing around it (full screen on phones).
+         Its text is drawn at its own scale, --ui-px per font pixel, whatever the office's
+         scale: 2× for text, 3× for headings, all whole pixels so it stays crisp. */
+      .panel {
+        --unit: var(--ui-px);
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        margin: auto;
+        width: min(calc(100% - var(--px) * 24), 880px);
+        height: calc(100% - var(--px) * 24);
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        font-size: calc(var(--unit) * 9);
+        line-height: calc(var(--unit) * 13);
+      }
+      .panel[hidden] {
+        display: none;
+      }
+      /* Phones: the whole screen, clear of the notch and the home bar, with the page behind
+         held still. */
+      @media (max-width: 40rem) {
+        .panel {
+          position: fixed;
+          inset: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom)
+            env(safe-area-inset-left);
+          width: auto;
+          height: auto;
+        }
+        .window-open body {
+          overflow: hidden;
+        }
+      }
+      .panel header,
+      .panel footer {
+        display: flex;
+        align-items: center;
+        gap: calc(var(--unit) * 6);
+        padding: calc(var(--unit) * 3) calc(var(--unit) * 6);
+      }
+      .panel header {
+        align-items: baseline;
+      }
+      .panel h2 {
+        font: inherit;
+        font-size: calc(var(--unit) * 13.5);
+        line-height: calc(var(--unit) * 19.5);
+        text-transform: uppercase;
+      }
+      .panel .subtitle {
+        flex: 1;
+        min-width: 0;
+        color: var(--ui-shadow);
+        text-shadow: none;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+      .panel .close {
+        all: unset;
+        margin-left: auto;
+        padding: 0 var(--unit);
+        cursor: pointer;
+      }
+      /* Phones: the subtitle goes under the title rather than being cut short. */
+      @media (max-width: 40rem) {
+        .panel header {
+          flex-wrap: wrap;
+          row-gap: 0;
+        }
+        .panel .subtitle {
+          order: 1;
+          flex-basis: 100%;
+          white-space: normal;
+        }
+      }
+      .panel footer {
+        justify-content: space-between;
+        white-space: nowrap;
+      }
+      .panel footer a {
+        color: inherit;
+      }
+      @media (hover: none) {
+        .panel .keys {
+          display: none;
+        }
+      }
+      .panel-box {
+        position: relative;
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        padding: 0 0 calc(var(--unit) * 6);
+      }
+      .panel-box .more {
+        bottom: calc(var(--unit) * -1);
+      }
+      .panel-body {
+        position: relative;
+        flex: 1;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        scrollbar-width: none;
+        padding: calc(var(--unit) * 4) calc(var(--unit) * 8) 0 calc(var(--unit) * 12);
+        outline: none;
+      }
+      .panel-body::-webkit-scrollbar,
+      .split-pane::-webkit-scrollbar {
+        display: none;
+      }
+      .cursor {
+        position: absolute;
+        left: calc(var(--unit) * 4);
+        line-height: calc(var(--unit) * 9);
+      }
+
+      /* Plain page content, as fetched. */
+      .panel-content {
+        max-width: calc(var(--unit) * 340);
+      }
+      .panel-content :is(h2, h3) {
+        font: inherit;
+        color: var(--ui-heading);
+        margin: calc(var(--unit) * 8) 0 calc(var(--unit) * 2);
+      }
+      .panel-content h2 {
+        text-transform: uppercase;
+      }
+      .panel-content > :first-child {
+        margin-top: 0;
+      }
+      .panel-content :is(p, ul, ol) {
+        margin: calc(var(--unit) * 4) 0;
+      }
+      .panel-content :is(ul, ol) {
+        padding-left: calc(var(--unit) * 8);
+      }
+      .panel-content :is(.list, .posts, .sections, .latest, .tags) {
+        list-style: none;
+        padding: 0;
+      }
+      .panel-content :is(.list, .posts, .sections) > li {
+        margin-bottom: calc(var(--unit) * 5);
+      }
+      .panel-content a {
+        color: var(--ui-link);
+        text-decoration: none;
+      }
+      .panel-content :is(a, button):focus {
+        outline: none;
+      }
+      .panel-content :is(time, .when, .empty, .status, .sections a) {
+        color: var(--ui-muted);
+      }
+      .panel-content .sections strong {
+        color: var(--ui-link);
+      }
+      .panel-content :is(strong, b) {
+        font-weight: normal;
+      }
+      .panel-content em {
+        font-style: normal;
+      }
+      .panel-content :is(.badge, .chip) {
+        display: inline-block;
+        margin-left: calc(var(--unit) * 3);
+        padding: 0 calc(var(--unit) * 3);
+        background: var(--ui-band);
+        color: var(--ui-band-text);
+        text-shadow: var(--band-shadow);
+        text-transform: uppercase;
+      }
+      .panel-content .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0 calc(var(--unit) * 5);
+      }
+      .panel-content .tag[aria-current] {
+        color: var(--ui-text);
+      }
+      .panel-content .icon {
+        display: none;
+      }
+      .panel-content img {
+        max-width: 100%;
+        height: auto;
+      }
+
+      /* The list-and-detail view (src/ui/split.js): items on the left, the chosen one on the
+         right; on narrow screens one at a time. */
+      .panel-body:has(.split) {
+        overflow: hidden;
+        padding: 0;
+      }
+      .panel-content:has(.split) {
+        max-width: none;
+        height: 100%;
+      }
+      .split {
+        display: grid;
+        grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+        height: 100%;
+      }
+      .split.narrow {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .split-pane {
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        scrollbar-width: none;
+        padding: calc(var(--unit) * 4) calc(var(--unit) * 6);
+      }
+      .split-list {
+        border-right: calc(var(--unit) * 1) solid var(--ui-shadow);
+        padding-left: calc(var(--unit) * 2);
+      }
+      .split.narrow .split-list {
+        border-right: 0;
+      }
+      .split-row {
+        all: unset;
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        column-gap: calc(var(--unit) * 4);
+        width: 100%;
+        box-sizing: border-box;
+        padding: calc(var(--unit) * 2) 0 calc(var(--unit) * 2) calc(var(--unit) * 9);
+        cursor: pointer;
+      }
+      .split-row .row-sub {
+        grid-column: 1 / -1;
+        color: var(--ui-muted);
+      }
+      .split-row .row-chip {
+        align-self: start;
+      }
+      .split-row.current::before {
+        content: '▶';
+        position: absolute;
+        left: calc(var(--unit) * 2);
+        color: var(--ui-muted);
+      }
+      .split[data-focus='list'] .split-row.current::before {
+        color: var(--ui-text);
+      }
+      .split-detail > :first-child {
+        margin-top: 0;
+      }
+      .split-detail h3 {
+        font-size: calc(var(--unit) * 13.5);
+        line-height: calc(var(--unit) * 19.5);
+        margin-bottom: calc(var(--unit) * 3);
+      }
+      .split-detail h3 .badge {
+        font-size: calc(var(--unit) * 9);
+        line-height: calc(var(--unit) * 13);
+        vertical-align: calc(var(--unit) * 3);
+      }
+      .split-detail .links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: calc(var(--unit) * 4);
+        font-size: 0;
+        margin-top: calc(var(--unit) * 8);
+      }
+      .split-detail .links a {
+        font-size: calc(var(--unit) * 9);
+        padding: calc(var(--unit) * 1) calc(var(--unit) * 4);
+        border: var(--unit) solid currentColor;
+      }
+      .split-back {
+        all: unset;
+        cursor: pointer;
+        color: var(--ui-link);
+        margin-bottom: calc(var(--unit) * 4);
+        display: block;
+      }
+
+      /* Shelves (src/ui/shelf.js) of books or mugs: the chosen one lifts (or, lying in the
+         pile, slides out). Neighbouring books share their outline; mugs stand apart. */
+      .shelf canvas,
+      .shelf-detail canvas {
+        display: block;
+        width: calc(var(--unit) * var(--w));
+        height: calc(var(--unit) * var(--h));
+        image-rendering: pixelated;
+      }
+      .shelf-line {
+        display: flex;
+        align-items: flex-end;
+        padding-top: calc(var(--unit) * 3);
+        margin-bottom: calc(var(--unit) * 6);
+        border-bottom: calc(var(--unit) * 3) solid var(--ui-shelf);
+        box-shadow: 0 var(--unit) 0 var(--ui-shelf-shade);
+      }
+      .shelf .shelf-item {
+        all: unset;
+        display: block;
+        cursor: pointer;
+      }
+      .shelf-line > .book + .book {
+        margin-left: calc(var(--unit) * -1);
+      }
+      .shelf-line > .mug {
+        margin-right: calc(var(--unit) * 4);
+      }
+      .shelf .shelf-item:is(.selected, .current) canvas {
+        transform: translateY(calc(var(--unit) * -3));
+      }
+      .shelf-pile {
+        display: flex;
+        flex-direction: column;
+        margin-left: calc(var(--unit) * 2);
+      }
+      .shelf-pile > .book + .book {
+        margin-top: calc(var(--unit) * -1);
+      }
+      .shelf-pile .book:is(.selected, .current) canvas {
+        transform: translateX(calc(var(--unit) * 3));
+      }
+      .shelf-detail {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        column-gap: calc(var(--unit) * 6);
+        align-items: start;
+      }
+      .shelf-detail .shelf-notes {
+        grid-column: 1 / -1;
+      }
+      .shelf-about h3 {
+        margin-top: calc(var(--unit) * 4);
+      }
+      .shelf-about .when {
+        margin: 0;
+      }
+      .split-heading {
+        font-size: calc(var(--unit) * 9);
+        line-height: calc(var(--unit) * 13);
+        color: var(--ui-muted);
+        margin: calc(var(--unit) * 6) 0 calc(var(--unit) * 2);
+      }
+      .split-list > .split-heading:first-child {
+        margin-top: 0;
+      }
+
+      /* The link under the cursor, after the rules above so it wins. */
+      .panel-content a.selected,
+      .panel-content a.selected * {
+        background: var(--ui-band);
+        color: var(--ui-band-text);
+        text-shadow: var(--band-shadow);
+      }
+
+      /* ── The hub: the plain homepage, below the game or instead of it ─────── */
+      .hub {
+        max-width: 40rem;
+        margin: 0 auto;
+        padding: 2rem 1rem 4rem;
+        font: 1.05rem/1.65 system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      }
+      .hub h2 {
+        font-size: 1.15rem;
+        margin: 2rem 0 0.5rem;
+      }
+      .hub h2:first-child {
+        font-size: 1.6rem;
+        margin-top: 0;
+      }
+      .hub p {
+        margin: 0.5rem 0;
+      }
+      .hub ul {
+        list-style: none;
+        padding: 0;
+      }
+      .hub time {
+        color: var(--muted);
+        font: 0.85rem ui-monospace, Menlo, Consolas, monospace;
+        margin-right: 0.5em;
+      }
+      .hub .sections li {
+        margin: 0.6rem 0;
+      }
+      .hub .sections a {
+        display: grid;
+        grid-template-columns: 64px 1fr;
+        gap: 0.75rem;
+        align-items: center;
+        text-decoration: none;
+        color: var(--fg);
+      }
+      .hub .sections a:hover strong {
+        text-decoration: underline;
+      }
+      .hub .sections span {
+        color: var(--muted);
+      }
+      .hub .sections strong {
+        color: var(--accent);
+      }
+      .hub .icon {
+        image-rendering: pixelated;
+        justify-self: center;
+      }
+      .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- top-bar -->
+    <div class="game">
+      <h1 class="visually-hidden">Tom Titcombe's office</h1>
+      <div class="stage">
+        <canvas
+          id="screen"
+          aria-label="A pixel-art office you can walk around. Each object opens a section; the same sections are in the links above."
+        ></canvas>
+        <div id="dialogue" class="dialogue"></div>
+        <div id="panel"></div>
+      </div>
+      <p class="hint">
+        <span class="keys-hint">WASD / arrows to walk · E or Space to interact · or just click things</span>
+        <span class="touch-hint">Tap to walk · tap things to use them</span>
+        <br />
+        Prefer a normal website? Scroll down, or skip the game up top.
+      </p>
+    </div>
+    <!-- hub -->
+    <script type="application/json" id="site-data"><!-- site-data --></script>
+    <script type="module" src="src/main.js"></script>
+  </body>
+</html>

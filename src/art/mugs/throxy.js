@@ -1,0 +1,28 @@
+// Throxy: a charcoal mug with the open-envelope logo in cream and a lavender rim.
+export const throxy = {
+  body: 'n',
+  rim: 'H',
+  inside: 'h',
+  shine: 'd',
+  print: [
+    '..........WW..........',
+    '........WWWWWW........',
+    '......WWW.WW.WWW......',
+    '....WWW...WW...WWW....',
+    '..WWW.....WW.....WWW..',
+    '..W.......WW.......W..',
+    '..........WW..........',
+    'WW........WW........WW',
+    'WWW.......WW.......WWW',
+    'WW.WW............WW.WW',
+    'WW...WW........WW...WW',
+    'WW.....W.....WW.....WW',
+    'WW.........WW.......WW',
+    'WW.......WW.........WW',
+    'WW.....WW...........WW',
+    'WW....WW............WW',
+    'WW..................WW',
+    'WWWWWWWWWWWWWWWWWWWWWW',
+    'WWWWWWWWWWWWWWWWWWWWWW',
+  ],
+};
